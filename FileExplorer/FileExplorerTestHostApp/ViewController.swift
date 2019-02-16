@@ -24,19 +24,39 @@
 //  SOFTWARE.
 
 import UIKit
+import FileExplorer
 
 class ViewController: UIViewController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @IBAction
+    func handleShowFileExplorerButton() {
+        let vc = FileExplorerViewController()
+        
+        vc.delegate = self
+        self.present(vc, animated: true, completion: nil)
     }
-
-
 }
 
+extension ViewController: FileExplorerViewControllerDelegate {
+    public func fileExplorerViewController(_ controller: FileExplorerViewController, didChooseURLs urls: [URL]) {
+        var message = ""
+        for url in urls {
+            message += "\(url.lastPathComponent)"
+            if url != urls.last {
+                message += "\n"
+            }
+        }
+        
+        let alertController = UIAlertController(title: "Choosen files", message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    public func fileExplorerViewControllerDidFinish(_ controller: FileExplorerViewController) {
+        
+    }
+}

@@ -27,7 +27,7 @@ import Foundation
 
 extension FileManager {
     static func createDirectory(at url: URL) {
-        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: [String: Any]())
+        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: convertToOptionalFileAttributeKeyDictionary([String: Any]()))
     }
 
     static func createCacheDirectory() -> URL {
@@ -35,4 +35,10 @@ extension FileManager {
         createDirectory(at: url)
         return url
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalFileAttributeKeyDictionary(_ input: [String: Any]?) -> [FileAttributeKey: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (FileAttributeKey(rawValue: key), value)})
 }

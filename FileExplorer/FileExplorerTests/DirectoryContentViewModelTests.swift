@@ -51,7 +51,7 @@ final class MockedFileService: FileService {
     }
 
     func delete(items: [Item<Any>], completionBlock: @escaping (_ result: Result<Void>, _ removedItems: [Item<Any>], _ itemsNotRemovedDueToFailure: [Item<Any>]) -> Void) {
-        completionBlock(.success(), items, [Item<Any>]())
+        completionBlock(.success(()), items, [Item<Any>]())
     }
 }
 
@@ -703,7 +703,7 @@ extension NonDiscDirectoryContentViewModelTests {
 
     func indexPathsOfDirectories() -> [IndexPath] {
         let displayedItems = getDisplayedItems()
-        return displayedItems.flatMap {
+        return displayedItems.compactMap {
             if $0.type == .directory {
                 return IndexPath(item: displayedItems.index(of: $0)!, section: 0)
             } else {
@@ -717,7 +717,7 @@ extension NonDiscDirectoryContentViewModelTests {
 
     func indexPathsOfFiles() -> [IndexPath] {
         let displayedItems = getDisplayedItems()
-        return displayedItems.flatMap {
+        return displayedItems.compactMap {
             if $0.type == .file {
                 return IndexPath(item: displayedItems.index(of: $0)!, section: 0)
             } else {

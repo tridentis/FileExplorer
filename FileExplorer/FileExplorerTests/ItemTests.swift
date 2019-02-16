@@ -39,13 +39,13 @@ final class ItemTests: XCTestCase {
         super.setUp()
 
         cacheDirectoryURL = URL.cacheDirectory
-        try? FileManager.default.createDirectory(at: cacheDirectoryURL, withIntermediateDirectories: true, attributes: [String: Any]())
+        try? FileManager.default.createDirectory(at: cacheDirectoryURL, withIntermediateDirectories: true, attributes: convertToOptionalFileAttributeKeyDictionary([String: Any]()))
 
         directoryURL = cacheDirectoryURL.appendingPathComponent("directory")
-        try? FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: false, attributes: [String: Any]())
+        try? FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: false, attributes: convertToOptionalFileAttributeKeyDictionary([String: Any]()))
 
         let image = UIImage.makeImage(withColor: UIColor.red)
-        let imageData = UIImagePNGRepresentation(image)!
+        let imageData = image.pngData()!
         imageFileURL = cacheDirectoryURL.appendingPathComponent("image.png")
         try? imageData.write(to: imageFileURL)
 
@@ -79,3 +79,9 @@ final class ItemTests: XCTestCase {
     }
 }
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalFileAttributeKeyDictionary(_ input: [String: Any]?) -> [FileAttributeKey: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (FileAttributeKey(rawValue: key), value)})
+}

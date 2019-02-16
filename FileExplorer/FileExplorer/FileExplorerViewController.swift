@@ -104,7 +104,7 @@ public final class FileExplorerViewController: UIViewController {
         view.backgroundColor = UIColor.white
         
         let navigationController = UINavigationController()
-        addContentChildViewController(navigationController)
+        addChild(navigationController)
         coordinator = ItemPresentationCoordinator(navigationController: navigationController)
         coordinator.delegate = self
     }

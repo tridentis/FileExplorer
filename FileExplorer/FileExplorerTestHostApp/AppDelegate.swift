@@ -24,6 +24,7 @@
 //  SOFTWARE.
 
 import UIKit
+import FileExplorer
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -31,8 +32,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        let directoryURL = URL.documentDirectory
+        print(directoryURL)
+
+        let audioURL = Bundle.main.url(forResource: "audio", withExtension: "mp3")!
+        let videoURL = Bundle.main.url(forResource: "video", withExtension: "mp4")!
+        let pdfURL = Bundle.main.url(forResource: "pdf", withExtension: "pdf")!
+        let image = UIImage(named: "image.jpg")!
+        let imageData = image.pngData()!
+        
+        
+        let firstDirectoryURL = directoryURL.appendingPathComponent("Directory")
+        try? FileManager.default.createDirectory(at: firstDirectoryURL, withIntermediateDirectories: true, attributes: [FileAttributeKey: Any]())
+        
+        let items = [
+            (audioURL, "audio.mp3"),
+            (videoURL, "video.mp4"),
+            (pdfURL, "pdf.pdf")
+        ]
+        for (url, filename) in items {
+            let destinationURL = firstDirectoryURL.appendingPathComponent(filename)
+            try? FileManager.default.copyItem(at: url, to: destinationURL)
+        }
+        
+        let imageURL = firstDirectoryURL.appendingPathComponent("image.png")
+        try? imageData.write(to: imageURL)
+        
+        let subdirectoryURL = firstDirectoryURL.appendingPathComponent("Empty Directory")
+        try? FileManager.default.createDirectory(at: subdirectoryURL, withIntermediateDirectories: true, attributes: [FileAttributeKey: Any]())
+        
+        let secondDirectoryURL = directoryURL.appendingPathComponent("Empty Directory")
+        try? FileManager.default.createDirectory(at: secondDirectoryURL, withIntermediateDirectories: true, attributes: [FileAttributeKey: Any]())
+        
         return true
     }
 
